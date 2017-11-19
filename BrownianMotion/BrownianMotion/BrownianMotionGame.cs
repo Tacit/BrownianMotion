@@ -43,7 +43,7 @@ namespace BrownianMotion
             // TODO: Add your initialization logic here
             base.Initialize();
             objects = new List<IGameObject>();
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < 70;  i++)
             {
                 objects.Add(new Molecula(new Vector2(r.Next(0, graphics.PreferredBackBufferHeight),
                                                         r.Next(0, graphics.PreferredBackBufferWidth)), test, r));
@@ -89,11 +89,9 @@ namespace BrownianMotion
                 CheckCollisionWithBorder(o);
                 foreach (var o1 in objects)
                 {
-                    if (o != o1)
-                    {
-                        CheckCollision(o, o1);
-                    }
+                    CheckCollision(o, o1);
                 }
+
                 o.Update(gameTime);
             }
 
@@ -122,28 +120,45 @@ namespace BrownianMotion
         {
             Vector2 vector = new Vector2(1f, 1f);
 
-            if (object1.Position.X > object2.Position.X && 
-                object1.Position.X < object2.Position.X + object2.Size.X &&
-                object1.Position.Y > object2.Position.Y && 
-                object1.Position.Y < object2.Position.Y + object2.Size.Y)
+            if (object1 == object2)
+                return;
+
+            if (object1.Bounds.Intersects(object2.Bounds))
             {
-                vector.X = -1f;
+                if (object1.Bounds.Top <= object2.Bounds.Bottom || object1.Bounds.Bottom >= object2.Bounds.Top)
+                    vector.Y = -1f;
+
+                if (object1.Bounds.Left <= object2.Bounds.Right || object1.Bounds.Right >= object2.Bounds.Left)
+                    vector.X = -1f;
+
                 object1.OnColision(vector, object2);
             }
-
             
         }
 
         protected void CheckCollisionWithBorder(IGameObject object1)
         {
             Vector2 vector = new Vector2(1f, 1f);
-            if (object1.Position.X - object1.Size.X / 2 < 0 ||
-                object1.Position.X + object1.Size.X > graphics.PreferredBackBufferWidth)
-                vector.X = -1f;
-            if (object1.Position.Y - (object1.Size.Y / 2) < 0 ||
-                object1.Position.Y + (object1.Size.Y) > graphics.PreferredBackBufferHeight)
-                vector.Y = -1f;
+            Vector2 normal = Vector2.One;
+            if (object1.Bounds.Left < 0)
+            {
+                vector.X *= -1;
+            }
+            else if (object1.Bounds.Right > graphics.PreferredBackBufferWidth)
+            {
+                vector.X *= -1;
+            }
+            else if (object1.Bounds.Top < 0)
+            {
+                vector.Y *= -1;
+            }
+            else if (object1.Bounds.Bottom > graphics.PreferredBackBufferHeight)
+            {
+                vector.Y *= -1;
+            }
 
+            //normal.Normalize();
+            //object1.Velocity = Vector2.Reflect(object1.Velocity, normal);
             object1.OnColision(vector);
         }
     }

@@ -11,7 +11,7 @@ namespace BrownianMotion
     {
         Vector2 Velocity {get; set;}
         Vector2 Position { get; set; }
-        Vector2 Size { get; set; }
+        Rectangle Bounds { get; }
         void Update(GameTime gameTime);
         void Draw(SpriteBatch spriteBatch);
         void OnColision(Vector2 vector);

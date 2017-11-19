@@ -14,7 +14,12 @@ namespace BrownianMotion
 
         public Vector2 Velocity { get; set; }
         public Vector2 Position { get; set; }
+        public Vector2 OldPosition { get; set; }
         public Vector2 Size { get; set; }
+        public Rectangle Bounds
+        {
+            get { return new Rectangle((int)Position.X, (int)Position.Y, (int)Size.X, (int)Size.Y); }
+        }
 
         public Molecula(Vector2 pos, Texture2D texture, Random r)
         {
@@ -23,11 +28,13 @@ namespace BrownianMotion
             float y = (float)(r.Next(-100, 100)) / 100;
             Velocity = new Vector2(x, y);
             Position = pos;
+            OldPosition = pos;
             this.texture = texture;
         }
 
         public void Update(GameTime gameTime)
         {
+            OldPosition = Position;
             Position = new Vector2(Position.X + Velocity.X, Position.Y + Velocity.Y);
         }
 
@@ -47,9 +54,15 @@ namespace BrownianMotion
 
         public void OnColision(Vector2 vector, IGameObject object2)
         {
-            this.Velocity = new Vector2((Velocity.X + object2.Velocity.X/2) * -1, 
-                Velocity.Y);
-            //this.Velocity = new Vector2(Velocity.X * -1, Velocity.Y * -1);
+            Vector2 normal = object2.Velocity;
+            normal.Normalize();
+            Velocity = Vector2.Reflect(Velocity, normal);
+            //this.Velocity = new Vector2(Velocity.X * vector.X, Velocity.Y * vector.Y);
+            Position = OldPosition;
+            Position = new Vector2(Position.X + Velocity.X, Position.Y + Velocity.Y);
         }
+
+
+        
     }
 }
