@@ -24,8 +24,8 @@ namespace BrownianMotion
         public Molecula(Vector2 pos, Texture2D texture, Random r)
         {
             Size = new Vector2(16f, 16f);
-            float x = (float)(r.Next(-100, 100)) / 100;
-            float y = (float)(r.Next(-100, 100)) / 100;
+            float x = (float)(r.Next(-100, 100)) / 130;
+            float y = (float)(r.Next(-100, 100)) / 130;
             Velocity = new Vector2(x, y);
             Position = pos;
             OldPosition = pos;
@@ -57,12 +57,7 @@ namespace BrownianMotion
             Vector2 normal = object2.Velocity;
             normal.Normalize();
             Velocity = Vector2.Reflect(Velocity, normal);
-            //this.Velocity = new Vector2(Velocity.X * vector.X, Velocity.Y * vector.Y);
             Position = OldPosition;
-            Position = new Vector2(Position.X + Velocity.X, Position.Y + Velocity.Y);
         }
-
-
-        
     }
 }

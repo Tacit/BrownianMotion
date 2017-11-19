@@ -43,10 +43,32 @@ namespace BrownianMotion
             // TODO: Add your initialization logic here
             base.Initialize();
             objects = new List<IGameObject>();
-            for (int i = 0; i < 70;  i++)
+            
+            var line = 0;
+            var row = 0;
+
+            for (int i = 0; i < 120;  i++, row++)
             {
-                objects.Add(new Molecula(new Vector2(r.Next(0, graphics.PreferredBackBufferHeight),
-                                                        r.Next(0, graphics.PreferredBackBufferWidth)), test, r));
+                var obj = new Molecula(new Vector2(), 
+                                        test, 
+                                        r);
+                //obj.Velocity = Vector2.Zero;
+
+                var currentRow = row * (obj.Size.X * 2) + 5;
+                 
+                if (currentRow >= graphics.PreferredBackBufferWidth - obj.Size.X)
+                {
+                    line++;
+                    row = 0;
+                    currentRow = row * (obj.Size.X * 2) + 5;
+                }
+
+                var currentLine = line * (obj.Size.Y * 2) + 5;
+
+                obj.Position = new Vector2(currentRow, currentLine);
+
+                objects.Add(obj);
+                
             }
 
         }
@@ -140,19 +162,19 @@ namespace BrownianMotion
         {
             Vector2 vector = new Vector2(1f, 1f);
             Vector2 normal = Vector2.One;
-            if (object1.Bounds.Left < 0)
+            if (object1.Bounds.Left <= 0)
             {
                 vector.X *= -1;
             }
-            else if (object1.Bounds.Right > graphics.PreferredBackBufferWidth)
+            else if (object1.Bounds.Right >= graphics.PreferredBackBufferWidth)
             {
                 vector.X *= -1;
             }
-            else if (object1.Bounds.Top < 0)
+            else if (object1.Bounds.Top <= 0)
             {
                 vector.Y *= -1;
             }
-            else if (object1.Bounds.Bottom > graphics.PreferredBackBufferHeight)
+            else if (object1.Bounds.Bottom >= graphics.PreferredBackBufferHeight)
             {
                 vector.Y *= -1;
             }
